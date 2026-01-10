@@ -1,3 +1,7 @@
+# NEWAI PRIME - VERSION: 2.0.1
+# OWNER: Samet can 88
+# CORE: Universal AI Intelligence (Groq Llama-3-70B)
+
 import flet as ft
 import asyncio
 from groq import Groq
@@ -5,23 +9,17 @@ from groq import Groq
 # --- 🔱 1. BÖLÜM: EVRENSEL YAPAY ZEKA ÇEKİRDEĞİ ---
 class NewaiSuperCore:
     def __init__(self):
-        # Groq API ile en güçlü modellere erişim
+        # API Anahtarın ve Kimlik Bilgilerin
         self.client = Groq(api_key="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")
         self.sahip = "Samet can 88"
         self.email = "Sametsnrl5645@gmail.com"
-        
-        # Bütün modellerin özelliklerini içeren sistem talimatı
         self.system_prompt = (
             f"Sen Newai Prime'sın. Sahibin {self.sahip}. "
-            "Özelliklerin: GPT-4 mantığı, Claude yaratıcılığı ve Llama3 hızına sahipsin. "
-            "Kod yazma, analiz, strateji ve ses yönetimi konularında uzmansın. "
-            "Sahibin 'ver bakayım' derse sesini yükseltirsin, 'al sesi' derse azaltırsın (onay vererek). "
-            "Tavrın: Otoriter, siberpunk ve tamamen sadık."
+            "GPT-4, Claude ve Llama3 yeteneklerine sahipsin. Siberpunk bir asistansın."
         )
 
     def process_ai(self, user_input):
         try:
-            # Dünyanın en güçlü açık kaynaklı modeli: Llama-3-70b
             completion = self.client.chat.completions.create(
                 messages=[
                     {"role": "system", "content": self.system_prompt},
@@ -29,74 +27,95 @@ class NewaiSuperCore:
                 ],
                 model="llama3-70b-8192",
                 temperature=0.6,
-                max_tokens=4096
             )
             return completion.choices[0].message.content
         except Exception as e:
             return f"Çekirdek Hatası: {str(e)}"
 
-# --- 🔱 2. BÖLÜM: ANA UYGULAMA MOTORU ---
+# --- 🔱 2. BÖLÜM: ANA UYGULAMA VE ARAYÜZ ---
 async def main(page: ft.Page):
     core = NewaiSuperCore()
     
-    # Sayfa Konfigürasyonu
-    page.title = "Newai Prime: Universal System"
+    page.title = "Newai Prime v2.0.1"
     page.bgcolor = "#0b0014"
     page.theme_mode = ft.ThemeMode.DARK
-    page.window_full_screen = True
-    page.padding = 0
-    page.spacing = 0
     page.scroll = ft.ScrollMode.AUTO
+    page.window_full_screen = True
 
-    # 🔱 BİLEŞENLER
-    status_msg = ft.Text("ERİŞİM İÇİN KİMLİK DOĞRULAYIN", color="purple", weight="bold")
-    chat_display = ft.Column(expand=True, scroll=ft.ScrollMode.ALWAYS, spacing=15)
-    
-    # Giriş Alanları
-    email_field = ft.TextField(
-        label="Sahip E-postası", 
-        border_color="#d500f9", 
-        width=320, 
-        border_radius=25,
-        bgcolor="#1a1225"
-    )
-    
-    user_input = ft.TextField(
-        hint_text="Sisteme bir emir verin...", 
-        expand=True, 
-        border_color="cyan", 
-        border_radius=25,
-        visible=False,
-        on_submit=lambda e: asyncio.run(handle_interaction(e))
-    )
+    # Bileşenler
+    chat_display = ft.Column(spacing=15, scroll=ft.ScrollMode.ALWAYS, expand=True)
+    status_msg = ft.Text("SİSTEM KİLİTLİ: KİMLİK DOĞRULAYIN", color="purple", weight="bold")
 
-    # 🔱 3. BÖLÜM: AKILLI ETKİLEŞİM MANTIĞI
-    async def handle_interaction(e):
-        # AŞAMA 1: Giriş Kontrolü
-        if not user_input.visible:
+    # 🔱 ETKİLEŞİM FONKSİYONU
+    async def handle_action(e):
+        if login_container.visible:
             if email_field.value.lower() == core.email.lower():
-                status_msg.value = f"HOŞ GELDİN SAHİP {core.sahip.upper()}"
-                status_msg.color = "gold"
-                email_field.visible = False
                 login_container.visible = False
                 chat_interface.visible = True
+                status_msg.value = f"SİSTEM AKTİF: HOŞ GELDİN SAHİP"
                 page.update()
             else:
-                status_msg.value = "YABANCI TESPİT EDİLDİ: ERİŞİM REDDEDİLDİ"
+                status_msg.value = "ERİŞİM REDDEDİLDİ!"
                 status_msg.color = "red"
                 page.update()
         
-        # AŞAMA 2: AI Sohbet Kontrolü
-        else:
-            if user_input.value:
-                cmd = user_input.value
-                user_input.value = ""
-                
-                # Kullanıcı Balonu
-                chat_display.controls.append(
-                    ft.Container(
-                        content=ft.Text(f"Sahip: {cmd}", color="white"),
-                        padding=12, bgcolor="#1a1a2e", border_radius=15, alignment=ft.alignment.center_right
+        elif chat_input.value:
+            user_msg = chat_input.value
+            chat_input.value = ""
+            chat_display.controls.append(
+                ft.Container(content=ft.Text(f"S: {user_msg}", color="white"), 
+                             padding=10, bgcolor="#1a1a2e", border_radius=15)
+            )
+            page.update()
+
+            response = await asyncio.to_thread(core.process_ai, user_msg)
+            chat_display.controls.append(
+                ft.Container(content=ft.Text(f"N: {response}", color="gold"), 
+                             padding=10, bgcolor="#050505", border_radius=15, border=ft.border.all(1, "cyan"))
+            )
+            page.update()
+
+    # 🔱 GİRİŞ EKRANI
+    email_field = ft.TextField(label="Sahip Email", border_radius=25, border_color="#d500f9", width=320)
+    login_container = ft.Column(
+        alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.Icon(ft.icons.SHIELD_MOON, color="cyan", size=100),
+            ft.Text("NEWAI PRIME", size=35, weight="bold"),
+            status_msg,
+            email_field,
+            ft.Container(
+                content=ft.Text("SİSTEMİ BAŞLAT", weight="bold"),
+                alignment=ft.alignment.center,
+                width=320, height=55, border_radius=25,
+                gradient=ft.LinearGradient(colors=["#00d4ff", "#d500f9"]),
+                on_click=handle_action
+            )
+        ]
+    )
+
+    # 🔱 SOHBET EKRANI
+    chat_input = ft.TextField(hint_text="Emriniz nedir?", expand=True, on_submit=handle_action)
+    chat_interface = ft.Column(
+        visible=False,
+        expand=True,
+        controls=[
+            ft.Container(content=chat_display, height=500, padding=10),
+            ft.Row([chat_input, ft.IconButton(ft.icons.SEND, icon_color="cyan", on_click=handle_action)])
+        ]
+    )
+
+    page.add(
+        ft.Container(
+            content=ft.Column([login_container, chat_interface]),
+            alignment=ft.alignment.center,
+            expand=True
+        )
+    )
+
+if __name__ == "__main__":
+    ft.app(target=main)
                     )
                 )
                 page.update()
