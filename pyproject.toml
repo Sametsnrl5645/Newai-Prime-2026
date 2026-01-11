@@ -1,8 +1,8 @@
 [tool.briefcase]
 project_name = "Newai Prime"
-bundle = "com.sametcan88.newai"  # 🔱 Senin özel mühürünle güncellendi
+bundle = "com.sametcan88.newai"
 version = "1.0.1"
-url = "https://https://github.com/Sametsnrl5645/Newai-Prime-2026/"
+url = "https://github.com/Sametsnrl5645/Newai-Prime-2026"
 license = "MIT"
 author = "Samet Can 88"
 author_email = "Sametsnrl5645@gmail.com"
@@ -30,29 +30,27 @@ requires = ["toga-gtk"]
 requires = ["toga-winforms"]
 
 [tool.briefcase.app.newai-prime.android]
-# 🔱 NEWAI TAM YETKİ VE SİSTEM YÖNETİM PROTOKOLÜ
+build_variant = "release"
+# 🔱 SENİN EKLEDİĞİN TAM YETKİ LİSTESİ (Hatasız Format)
 permissions = [
-    "INTERNET",                         # Groq Beyin bağlantısı
-    "ACCESS_NETWORK_STATE",             # İnternet kontrolü
-    "WRITE_EXTERNAL_STORAGE",           # Dosya yazma (Bulut)
-    "READ_EXTERNAL_STORAGE",            # Dosya okuma (Bulut)
-    "CAMERA",                           # 📷 Kamera erişimi
-    "RECORD_AUDIO",                     # 🎤 Mikrofon erişimi
-    "MODIFY_AUDIO_SETTINGS",            # 🔊 Ses yönetimi (Ver bakayım/Al sesi)
-    "ACCESS_COARSE_LOCATION",           # 📍 Konum (Şehir bazlı)
-    "ACCESS_FINE_LOCATION",             # 📍 Konum (Tam nokta)
-    "BLUETOOTH",                        # 🔵 Bluetooth temel
-    "BLUETOOTH_ADMIN",                  # 🔵 Bluetooth yönetimi
-    "BLUETOOTH_CONNECT",                # 🔵 Cihaz bağlantısı
-    "BLUETOOTH_SCAN",                   # 🔵 Cihaz tarama
-    "READ_MEDIA_IMAGES",                # 🖼️ Galeri erişimi
-    "READ_MEDIA_VIDEO",                 # 🎬 Video erişimi
-    "READ_MEDIA_AUDIO",                 # 🎵 Müzik ve Ses dosyaları
-    "MANAGE_EXTERNAL_STORAGE",          # 📂 Tüm dosya sistemine hükmetme
+    "INTERNET",
+    "ACCESS_NETWORK_STATE",
+    "WRITE_EXTERNAL_STORAGE",
+    "READ_EXTERNAL_STORAGE",
+    "CAMERA",
+    "RECORD_AUDIO",
+    "MODIFY_AUDIO_SETTINGS",
+    "ACCESS_COARSE_LOCATION",
+    "ACCESS_FINE_LOCATION",
+    "BLUETOOTH",
+    "BLUETOOTH_ADMIN",
+    "BLUETOOTH_CONNECT",
+    "BLUETOOTH_SCAN",
+    "READ_MEDIA_IMAGES",
+    "READ_MEDIA_VIDEO",
+    "READ_MEDIA_AUDIO",
+    "MANAGE_EXTERNAL_STORAGE",
 ]
 
-# 🔱 ASİSTAN VE İNŞA AYARLARI
-build_variant = "release"
-extra_manifest_attributes = {
-    "android:permission": "android.permission.BIND_ASSISTANT"
-}
+# 🔱 ASİSTAN PROTOKOLÜ
+extra_manifest_attributes = { "android:permission" = "android.permission.BIND_ASSISTANT" }
