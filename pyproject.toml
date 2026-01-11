@@ -35,7 +35,7 @@ requires = ["toga-gtk"]
 requires = ["toga-winforms"]
 
 [tool.briefcase.app.newai-prime.android]
-build_variant = "release"
+build_variant = "debug"
 # 🔱 SENİN EKLEDİĞİN TAM YETKİ LİSTESİ (Hatasız Format)
 permissions = [
     "INTERNET",
