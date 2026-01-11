@@ -1,49 +1,25 @@
-# ==========================================================
-# NEWAI PRIME 2026 - APK INŞA PROTOKOLÜ (BUILD.YAML)
-# Sahip: Samet Can 88
-# ==========================================================
+name: Build Newai Prime APK
+on: [push, pull_request]
 
-app:
-  name: "Newai Prime"
-  bundle: "com.sametcan88.newai"
-  version: "1.0.1"
-  display_name: "🔱 Newai Prime"
-  author: "Samet Can 88"
-  description: "Sonsuz Bulut Hafızalı ve Siber Güvenlik Kalkanlı Yapay Zeka"
+jobs:
+  android-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-android:
-  # 🔱 GEREKLİ KÜTÜPHANELER (Bu kısımlar olmazsa Groq çalışmaz!)
-  requires:
-    - toga-android
-    - groq
-    - httpx
-    - certifi
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-  # 🔱 ANDROID YETKİLERİ (Ses ve Bulut Hafıza için)
-  permissions:
-   "INTERNET",                         # Groq Beyin bağlantısı
-    "ACCESS_NETWORK_STATE",             # İnternet kontrolü
-    "WRITE_EXTERNAL_STORAGE",           # Dosya yazma (Bulut)
-    "READ_EXTERNAL_STORAGE",            # Dosya okuma (Bulut)
-    "CAMERA",                           # 📷 Kamera özelliği
-    "RECORD_AUDIO",                     # 🎤 Mikrofon (Sesli komut)
-    "MODIFY_AUDIO_SETTINGS",            # 🔊 Ses seviyesi yönetimi
-    "ACCESS_COARSE_LOCATION",           # 📍 Konum (Yaklaşık)
-    "ACCESS_FINE_LOCATION",             # 📍 Konum (Tam nokta)
-    "BLUETOOTH",                        # 🔵 Bluetooth cihazlar
-    "BLUETOOTH_ADMIN",                  # 🔵 Bluetooth yönetimi
-    "BLUETOOTH_CONNECT",                # 🔵 Yakındaki cihazlara bağlanma
-    "BLUETOOTH_SCAN",                   # 🔵 Cihaz tarama
-    "READ_MEDIA_IMAGES",                # 🖼️ Fotoğraflar erişimi
-    "READ_MEDIA_VIDEO",                 # 🎬 Video erişimi
-    "READ_MEDIA_AUDIO",                 # 🎵 Müzik ve Ses dosyaları
-    "MANAGE_EXTERNAL_STORAGE",          # 📂 Tüm dosya sistemi yönetimi
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install briefcase toga-android groq httpx certifi
 
-  # 🔱 GÖRSEL AYARLAR
-  build_variant: release
-  icon: "assets/newai_icon.png"  # Varsa ikonun yolu
-  splash_screen: "assets/splash.png"
-  
-  # 🔱 SİSTEM AYARLARI
-  min_sdk_version: 24  # Android 7.0 ve üzeri
-  target_sdk_version: 33 # Android 13 uyumluluğu
+      - name: Build Android APK
+        run: |
+          # 15. SATIR BURAYA DENK GELİYOR - HATASIZ KOMUTLAR:
+          briefcase build android --no-input
+          briefcase package android --no-input --adhoc
