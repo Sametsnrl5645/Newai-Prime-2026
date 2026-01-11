@@ -21,11 +21,12 @@ jobs:
       - name: Build Android APK
         run: |
           briefcase build android --no-input
-          # 🔱 BURAYI GÜNCELLE: --format apk ekliyoruz
-          briefcase package android --no-input --adhoc --format apk
+          # -p apk komutu ile doğru formatı istiyoruz
+          briefcase package android --no-input -p apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Newai-Prime-APK-Dosyasi
-          path: dist/*.apk  # Sadece uzantısı .apk olanları yukarı yükle
+          name: Newai-Prime-APK
+          # Loglardaki tam yolu hedef alıyoruz:
+          path: build/newai-prime/android/gradle/app/build/outputs/apk/debug/*.apk
