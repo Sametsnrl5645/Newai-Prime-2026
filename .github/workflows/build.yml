@@ -5,7 +5,7 @@
 
 app:
   name: "Newai Prime"
-  bundle: "com.newai.prime"
+  bundle: "com.sametcan88.newai"
   version: "1.0.1"
   display_name: "🔱 Newai Prime"
   author: "Samet Can 88"
