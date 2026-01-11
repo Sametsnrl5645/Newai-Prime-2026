@@ -23,3 +23,9 @@ jobs:
           # 15. SATIR BURAYA DENK GELİYOR - HATASIZ KOMUTLAR:
           briefcase build android --no-input
           briefcase package android --no-input --adhoc
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Newai-Prime-Android-Package
+          path: dist/
