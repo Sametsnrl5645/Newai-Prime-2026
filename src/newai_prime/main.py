@@ -1,49 +1,27 @@
 import flet as ft
 import asyncio
-from groq import Groq
-from brain import NewaiBrain
-
+import os
 from .brain import NewaiBrain, siber_guvenlik_taramasi
 
-# Kullanırken:
-brain = NewaiBrain()
-print(brain.cevap_ver("Merhaba"))
-
 async def main(page: ft.Page):
-    # 🔱 1. HATA ÖNLEME: CSS Kontrolü
-    # Eğer style.css yoksa sistem siyah ekran vermesin diye manuel ayar yapıyoruz
-    if os.path.exists("assets/style.css"):
-        page.stylesheets = ["style.css"]
-    elif os.path.exists("style.css"):
-        page.stylesheets = ["style.css"]
-
+    # 🔱 1. BEYİN BAĞLANTISI
     brain = NewaiBrain()
+
+    # 🔱 2. EKRAN AYARLARI
     page.title = "Newai Prime v1.0.1"
     page.bgcolor = "#050505"
     page.theme_mode = ft.ThemeMode.DARK
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.window_width = 450
-    page.window_height = 800
 
-    # 🔱 2. BİLEŞENLER (Altın Tasarım Sabitlendi)
+    # 🔱 3. BİLEŞENLER
     status_text = ft.Text("SİSTEM KİLİTLİ", color="#ffcc00", weight="bold", size=20)
-    
-    email_input = ft.TextField(
-        label="Sahip Email", border_color="#ffcc00", color="#ffcc00",
-        width=300, border_radius=10, focused_border_color="#ffcc00"
-    )
-    
-    pass_input = ft.TextField(
-        label="Şifre", password=True, can_reveal_password=True,
-        border_color="#ffcc00", color="#ffcc00", width=300,
-        border_radius=10, focused_border_color="#ffcc00"
-    )
-
+    email_input = ft.TextField(label="Sahip Email", width=300, border_color="#ffcc00")
+    pass_input = ft.TextField(label="Şifre", password=True, width=300, border_color="#ffcc00")
     chat_display = ft.Column(expand=True, scroll=ft.ScrollMode.ALWAYS)
     message_input = ft.TextField(hint_text="Emret sahip...", expand=True, border_color="#ffcc00")
 
-    # 🔱 3. FONKSİYONLAR
+    # 🔱 4. FONKSİYONLAR (Async uyumlu)
     async def login_logic(e):
         if brain.giris_kontrol(email_input.value, pass_input.value):
             status_text.value = "ERİŞİM ONAYLANDI"
@@ -65,11 +43,12 @@ async def main(page: ft.Page):
             chat_display.controls.append(ft.Text(f"SİZ: {user_msg}", color="white", weight="bold"))
             await page.update_async()
             
+            # Beyinden cevap al (Burayı await ile sarmalayabiliriz eğer async ise)
             cevap = brain.cevap_ver(user_msg)
             chat_display.controls.append(ft.Text(f"NEWAI: {cevap}", color="#ffcc00"))
             await page.update_async()
 
-    # 🔱 4. GÖRÜNÜMLER
+    # 🔱 5. GÖRÜNÜMLER
     login_view = ft.Container(
         content=ft.Column(
             controls=[
@@ -78,32 +57,26 @@ async def main(page: ft.Page):
                 status_text,
                 email_input,
                 pass_input,
-                ft.ElevatedButton(
-                    "SİSTEME SIZ", on_click=login_logic,
-                    bgcolor="#ffcc00", color="black"
-                )
+                ft.ElevatedButton("SİSTEME SIZ", on_click=login_logic, bgcolor="#ffcc00", color="black")
             ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=20
-        ),
-        padding=40,
-        border_radius=20,
-        border=ft.border.all(2, "#ffcc00")
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        )
     )
 
     main_view = ft.Column(
         visible=False, expand=True,
         controls=[
             ft.Text("NEWAI AKTİF", color="#ffcc00", size=22, weight="bold"),
-            ft.Divider(color="#ffcc00"),
             chat_display,
             ft.Row([message_input, ft.IconButton(ft.icons.SEND, on_click=send_message, icon_color="#ffcc00")])
         ]
     )
 
-    page.add(login_view, main_view)
-    await page.update_async()
+    await page.add_async(login_view, main_view)
+
+# 🔱 BeeWare/Android için standart başlatıcı
+def start():
+    ft.app(target=main)
 
 if __name__ == "__main__":
-    # ÖNEMLİ: assets_dir parametresini kaldırıp manuel yol verdik
-    ft.app(target=main)
+    start()
