@@ -4,6 +4,23 @@ import os
 import sys
 import glob
 
+# 1. Adım: Klasörün tam yerini Android'e ezberletiyoruz
+current_dir = os.path.dirname(os.path.realpath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+# 2. Adım: Klasör ismini (newai_prime) doğrudan bir nesne gibi çağırıyoruz
+try:
+    # Bu satır, klasörün içindeki her şeyi Python'un 'görülebilir' listesine ekler
+    import newai_prime
+    print(f"{self.symbol} Çekirdek klasör Android katmanına sızdı.")
+except ImportError as e:
+    # Eğer BeeWare klasörü bulamazsa, paket ismini deniyoruz
+    try:
+        from com.sametcan88.newai import newai_prime
+    except:
+        print(f"🔱 Hata: Klasör yolu mühürlenemedi: {e}")
+
 # Otorite Yolu: Çalışma anında modülleri bulmayı sağlar
 base_path = os.path.dirname(os.path.abspath(__file__))
 if base_path not in sys.path:
@@ -131,4 +148,5 @@ class NewaiInterface:
                 )
             ], expand=True)
         )
+
         self.page.update()
